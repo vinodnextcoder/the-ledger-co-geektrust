@@ -31,7 +31,7 @@ const loan = (bankName, borrowerName, amount, years, interest) => {
     let interestAmount = (parseFloat(amount) * parseFloat(years) * parseFloat(interest.trim())) / 100;
     let repayAmount = parseFloat(amount) + parseFloat(interestAmount);
     let emi = repayAmount / (years * 12);
-    emi = emi.toFixed(2)
+    emi = Math.ceil(emi.toFixed(2))
     let terms = (parseFloat(years) * 12);
     interest = interest.trim();
     loanList.push({ bankName, borrowerName, amount, years, interest, interestAmount, repayAmount, emi, terms });
@@ -41,8 +41,8 @@ const payment = (bankName, borrowerName, Amount, no) => {
     for (j = 0; j < loanList.length; j++) {
         if (loanList[j].borrowerName === borrowerName && loanList[j].bankName === bankName) {
             // console.log(loanList[j]);
-            let paidEmi = loanList[j].emi * no;
-            let newRepayAmount = loanList[j].repayAmount - paidEmi;
+            let paidEmi = Math.ceil(loanList[j].emi) * no;
+            let newRepayAmount = Math.ceil(loanList[j].repayAmount) - Math.ceil(paidEmi)
             newRepayAmount = newRepayAmount - Amount;
             loanList[j].terms = loanList[j].terms  - no;
 
@@ -52,8 +52,10 @@ const payment = (bankName, borrowerName, Amount, no) => {
 }
 const balance = (bankName, borrowerName, emiNo) => {
     let getLoanDetails = loanList.find(item => item.borrowerName == borrowerName.trim() && item.bankName === bankName.trim());
-    let paidEmi = Math.ceil(getLoanDetails.emi * emiNo);
-    let paidEmiTerm = parseFloat(getLoanDetails.terms) - emiNo
+    let EMI = Math.ceil(getLoanDetails.emi)
+    console.log('#######',EMI,emiNo);
+    let paidEmi = Math.ceil(EMI * emiNo);
+    let paidEmiTerm =Math.ceil(getLoanDetails.terms) - emiNo
     let str = getLoanDetails.bankName + " " + getLoanDetails.borrowerName + " " + paidEmi + " " + paidEmiTerm;
     console.log(str);
 }
